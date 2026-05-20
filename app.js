@@ -1,25 +1,28 @@
 const express = require("express");
+const mongoose = require("mongoose")
 const connectDB = require("./src/config/database")
 const app = express();
-const User = require("./src/Models/user")
+const cookieParser = require("cookie-parser");
+const userRouter = require("./src/routes/userRequests");
+const cors = require("cors");
+
+app.use (cors({
+    origin : "http://localhost:5173",
+    credentials :true,
+}));
+app.use(express.json());
+app.use(cookieParser())
+
+const authRouter = require("./src/routes/auth")
+const profileRouter = require("./src/routes/profile")
+const requestRouter = require("./src/routes/request")
+
+app.use("/",authRouter);
+app.use("/",profileRouter);
+app.use("/",requestRouter);
+app.use("/",userRouter)
 
 
-app.post("/signUp",async (req,res)=>{
-    //creating a new instance of the User Model 
-    const user = new User({
-        firstName : "Rahul",
-        lastName : "Nimbi",
-        emailId : "Rahul@example.com",
-        password : "abc@123"
-    });
-    try{
-        await user.save();
-    res.send("user added successfully!")
-    }catch{
-        res.status(400).send("error is saving!")
-    }
-    
-})
 
 connectDB()
     .then(() => {
@@ -32,5 +35,7 @@ connectDB()
     })
     .catch((err) => {
         console.log("Database not connected! ");
+        console.log(err);
+        
 
     });
