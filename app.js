@@ -6,9 +6,12 @@ const cookieParser = require("cookie-parser");
 const userRouter = require("./src/routes/userRequests");
 const cors = require("cors");
 
-app.use (cors({
-    origin : "http://localhost:5173",
-    credentials :true,
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://devtinderfrontend-ten.vercel.app"
+  ],
+  credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser())
